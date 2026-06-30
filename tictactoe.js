@@ -1,6 +1,5 @@
-/*const board = [["", "", ""], ["", "", ""], ["", "", ""],];*/
+const board = [["", "", ""], ["", "", ""], ["", "", ""],];
 
-const board = [["X", "X", "X"], ["X", "O", "O"], ["O", "X", "O"]]
 
 
 function createPlayer(name, symbol) {
@@ -112,11 +111,69 @@ function resultChecker(result) {
     }
 };
 
-const result = winHandler();
-resultChecker(result);
 
-players[0].getScore();
-players[1].getScore();
+function gameController() {
+    let currentPlayer = player[0];
+    let gameActive = true;
+
+    function makeMove(row, col) {
+        if (!gameActive) return;
+
+
+        if (board[row][col] !== "") return;
+
+        board[row][col] = currentPlayer.symbol;
+
+        const result = winChecker(board);
+
+        if (result !== null) {
+
+            if (result !== "draw") {
+                resultChecker(result);
+            }
+
+            gameActive = false;
+            return result
+        }
+
+        switchturn();
+    }
+
+
+    function switchturn() {
+        if (currentPlayer === players[0]) {
+            currentPlayer = players[1]
+        } else {
+            currentPlayer = players[0]
+        }
+    }
+
+    function getCurrentPlayer() {
+        return currentPlayer;
+    }
+
+    function resetGame() {
+        for (let i = 0; i < board.length; i++) {
+            for (let j = 0; j < board.length; j++) {
+                board[i][j] = "";
+            }
+        }
+        currentPlayer = players[0];
+        gameActive = true;
+
+    }
+
+
+
+    return {
+        makeMove,
+        getCurrentPlayer,
+        resetGame
+    };
+};
+
+
+
 
 
 
