@@ -113,7 +113,7 @@ function resultChecker(result) {
 
 
 function gameController() {
-    let currentPlayer = player[0];
+    let currentPlayer = players[0];
     let gameActive = true;
 
     function makeMove(row, col) {
@@ -124,23 +124,29 @@ function gameController() {
 
         board[row][col] = currentPlayer.symbol;
 
+        const placedSymbol = currentPlayer.symbol;
+
         const result = winChecker(board);
 
         if (result !== null) {
 
-            if (result !== "draw") {
+            if (result !== "Draw") {
                 resultChecker(result);
             }
 
             gameActive = false;
-            return result
+
         }
 
-        switchturn();
+        switchTurn();
+        return {
+            symbol: placedSymbol,
+            result: result
+        }
     }
 
 
-    function switchturn() {
+    function switchTurn() {
         if (currentPlayer === players[0]) {
             currentPlayer = players[1]
         } else {
@@ -163,14 +169,64 @@ function gameController() {
 
     }
 
-
-
     return {
         makeMove,
         getCurrentPlayer,
         resetGame
     };
 };
+
+// DOM manipulation
+
+const game = document.querySelector(".game");
+
+const title = document.createElement("h2");
+title.textContent = "Tic Tac Toe Game"
+
+const start = document.createElement("button");
+start.classList.add("start");
+start.textContent = "Start the Game!"
+
+game.appendChild(title);
+game.appendChild(start);
+
+
+start.addEventListener("click", () => {
+    const boxes = document.createElement("div");
+    boxes.classList.add("boxes");
+    game.appendChild(boxes);
+    for (let i = 0; i < board.length; i++) {
+        for (let j = 0; j < board[i].length; j++) {
+
+            const box = document.createElement("button");
+            box.classList.add("box");
+            box.dataset.row = i;
+            box.dataset.column = j;
+            box.textContent = board[i][j];
+            boxes.appendChild(box);
+        }
+    }
+    const gameCall = gameController();
+    const playBtns = document.querySelectorAll(".box");
+
+    playBtns.forEach((button) => {
+        button.addEventListener("click", () => {
+            const row = Number(button.dataset.row);
+            const column = Number(button.dataset.column);
+            const move = gameCall.makeMove(row, column);
+            button.textContent = move.symbol;
+            const resultDisplay = document.createElement("div")
+
+            if (move.result !== null) {
+                resultDisplay.textContent = `${move.result} has Won!`
+            } else if (move.result === "Draw") {
+                resultDisplay.textContent = "It's a Draw!"
+            }
+            boxes.appendChild(resultDisplay);
+        })
+    })
+});
+
 
 
 

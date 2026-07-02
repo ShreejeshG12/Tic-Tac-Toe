@@ -1,0 +1,38 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+.game {
+    display: grid;
+    place-items: center;
+}
+
+.box {
+    height: 100px;
+    width: 100px;
+    border: 1px balck solid;
+}
+
+.boxes {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    display: grid;
+    grid-template-rows: repeat(3, 100px);
+    grid-template-columns: repeat(3, 100px);
+    justify-content: center;
+    align-items: center;
+    gap: 2px;
+    width: 300px;
+    height: 300px;
+}
